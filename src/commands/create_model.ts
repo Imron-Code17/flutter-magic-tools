@@ -223,7 +223,13 @@ function formatSingleText(input: string): string {
 }
 
 function runBuildRunnerCommand(): void {
-    const terminal = vscode.window.createTerminal('Flutter Build Runner');
+    const terminalName = 'Flutter Magic';
+    let terminal = vscode.window.terminals.find(t => t.name === terminalName);
+
+    if (!terminal) {
+        terminal = vscode.window.createTerminal(terminalName);
+    }
+
     terminal.show();
     terminal.sendText('flutter pub run build_runner build');
 }

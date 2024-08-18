@@ -18,12 +18,8 @@
         "title": "Magic : Initialize"
       },
       {
-        "command": "fluttermagictools.menu",
-        "title": "Magic : Menu"
-      },
-      {
         "command": "fluttermagictools.createRequest",
-        "title": "Magic : Create Feature"
+        "title": "Magic : Create Request"
       },
       {
         "command": "fluttermagictools.createModel",
@@ -40,6 +36,92 @@
       {
         "command": "fluttermagictools.createEndpoint",
         "title": "Magic : Create Endpoint"
+      },
+      {
+        "command": "fluttermagictools.generate",
+        "title": "Magic : Generate"
+      },
+      {
+        "command": "fluttermagictools.cleanGet",
+        "title": "Magic : Clean & Get"
+      },
+      {
+        "command": "fluttermagictools.dartFix",
+        "title": "Magic : Dart Fix"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "fluttermagictools.initialize",
+        "key": "ctrl+m+i",
+        "when": "editorTextFocus",
+        "win": "ctrl+m+i",
+        "linux": "ctrl+m+i",
+        "mac": "cmd+m+i"
+      },
+      {
+        "command": "fluttermagictools.createRequest",
+        "key": "ctrl+m+r",
+        "when": "editorTextFocus",
+        "win": "ctrl+m+r",
+        "linux": "ctrl+m+r",
+        "mac": "cmd+m+r"
+      },
+      {
+        "command": "fluttermagictools.createModel",
+        "key": "ctrl+m+id",
+        "when": "editorTextFocus",
+        "win": "ctrl+m+id",
+        "linux": "ctrl+m+id",
+        "mac": "cmd+m+id"
+      },
+      {
+        "command": "fluttermagictools.createView",
+        "key": "ctrl+m+v",
+        "when": "editorTextFocus",
+        "win": "ctrl+m+v",
+        "linux": "ctrl+m+v",
+        "mac": "cmd+m+v"
+      },
+      {
+        "command": "fluttermagictools.createCubit",
+        "key": "ctrl+m+c",
+        "when": "editorTextFocus",
+        "win": "ctrl+m+c",
+        "linux": "ctrl+m+c",
+        "mac": "cmd+m+c"
+      },
+      {
+        "command": "fluttermagictools.createEndpoint",
+        "key": "ctrl+m+e",
+        "when": "editorTextFocus",
+        "win": "ctrl+m+e",
+        "linux": "ctrl+m+e",
+        "mac": "cmd+m+e"
+      },
+      {
+        "command": "fluttermagictools.generate",
+        "key": "ctrl+m+g",
+        "when": "editorTextFocus",
+        "win": "ctrl+m+g",
+        "linux": "ctrl+m+g",
+        "mac": "cmd+m+g"
+      },
+      {
+        "command": "fluttermagictools.cleanGet",
+        "key": "ctrl+m+c",
+        "when": "editorTextFocus",
+        "win": "ctrl+m+c",
+        "linux": "ctrl+m+c",
+        "mac": "cmd+m+c"
+      },
+      {
+        "command": "fluttermagictools.dartFix",
+        "key": "ctrl+m+f",
+        "when": "editorTextFocus",
+        "win": "ctrl+m+f",
+        "linux": "ctrl+m+f",
+        "mac": "cmd+m+f"
       }
     ]
   },

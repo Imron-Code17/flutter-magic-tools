@@ -6,6 +6,12 @@ import { registerCreateModelCommand } from './commands/create_model';
 import { registerCreateViewCommand } from './commands/create_view';
 import { registerCreateCubitCommand } from './commands/create_cubit';
 import { registerCreateEndpointCommand } from './commands/create_endpoint';
+import { registerGenerateCommand } from './commands/generate';
+import { registerCleanGetCommand } from './commands/clean_get';
+import { registerDartFixCommand } from './commands/dart_fix';
+
+
+
 
 /**
  * Activates the extension
@@ -22,6 +28,11 @@ export function activate(context: vscode.ExtensionContext): void {
 	registerCreateViewCommand(context);
 	registerCreateCubitCommand(context);
 	registerCreateEndpointCommand(context);
+	registerGenerateCommand(context);
+	registerCleanGetCommand(context);
+	registerDartFixCommand(context);
+
+
 
 	// Register webview provider
 	// Register other commands

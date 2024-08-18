@@ -34,7 +34,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.registerInitializeCommand = registerInitializeCommand;
-exports.deactivate = deactivate;
 const vscode = __importStar(__webpack_require__(2));
 const fs = __importStar(__webpack_require__(3));
 const path = __importStar(__webpack_require__(4));
@@ -103,10 +102,7 @@ async function registerInitializeCommand(context) {
                 createPresentationFiles(libPath);
                 createDiFiles(libPath);
                 createRouterFiles(libPath);
-                await runTask(`flutter pub add dio auto_route connectivity_plus path_provider collection dartz phosphor_flutter device_info_plus package_info_plus equatable flutter_easy_dialogs flutter_bloc freezed_annotation get_it gap hydrated_bloc json_annotation &&
-                    flutter pub add auto_route_generator build_runner freezed json_serializable -d &&
-                    flutter pub get &&
-                    flutter pub run build_runner build`);
+                await runTask();
                 vscode.window.showInformationMessage('Initialization complete.');
             }
             catch (err) {
@@ -268,15 +264,17 @@ function getScriptContent(fileName) {
             return `// Default script content for ${fileName}\n`;
     }
 }
-// Function to run a shell command
-async function runTask(command) {
-    const terminal = vscode.window.createTerminal('Flutter Build Runner');
+function runTask() {
+    const terminalName = 'Flutter Magic';
+    let terminal = vscode.window.terminals.find(t => t.name === terminalName);
+    if (!terminal) {
+        terminal = vscode.window.createTerminal(terminalName);
+    }
     terminal.show();
-    terminal.sendText(command);
-}
-// Export deactivate function
-function deactivate() {
-    // Clean-up logic if needed
+    terminal.sendText(`flutter pub add dio auto_route connectivity_plus path_provider collection dartz phosphor_flutter device_info_plus package_info_plus equatable flutter_easy_dialogs flutter_bloc freezed_annotation get_it gap hydrated_bloc json_annotation &&
+                    flutter pub add auto_route_generator build_runner freezed json_serializable -d &&
+                    flutter pub get &&
+                    flutter pub run build_runner build`);
 }
 
 
@@ -2021,6 +2019,80 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.registerMenuCommand = registerMenuCommand;
+const vscode = __importStar(__webpack_require__(2));
+const fs = __importStar(__webpack_require__(3));
+const path = __importStar(__webpack_require__(4));
+function registerMenuCommand(context) {
+    let menuCommand = vscode.commands.registerCommand('fluttermagictools.menu', async () => {
+        const panel = vscode.window.createWebviewPanel('fluttermagictools', 'Flutter Magic Tools', vscode.ViewColumn.Beside, {
+            enableScripts: true,
+            localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'src', 'menu'))]
+        });
+        const cssUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'src', 'menu', 'css', 'index.css')));
+        const jsUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'src', 'menu', 'js', 'index.js')));
+        const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '';
+        const entitiesFolderPath = path.join(rootPath, 'lib', 'domain', 'entities');
+        const htmlPath = path.join(context.extensionPath, 'src', 'menu', 'index.html');
+        let htmlContent = fs.readFileSync(htmlPath, 'utf8');
+        htmlContent = htmlContent.replace('{{cssUri}}', cssUri.toString());
+        htmlContent = htmlContent.replace('{{jsUri}}', jsUri.toString());
+        panel.webview.html = htmlContent;
+        panel.webview.onDidReceiveMessage(async (message) => {
+            switch (message.command) {
+                case 'loadModelFolders':
+                    try {
+                        if (!fs.existsSync(entitiesFolderPath)) {
+                            panel.webview.postMessage({ command: 'loadFolders', folders: [] });
+                            return;
+                        }
+                        const folders = fs.readdirSync(entitiesFolderPath).filter(file => {
+                            return fs.statSync(path.join(entitiesFolderPath, file)).isDirectory();
+                        });
+                        console.log(`Folders: ${folders}`); // Debugging output
+                        panel.webview.postMessage({ command: 'loadFolders', folders });
+                    }
+                    catch (error) {
+                        console.error('Error reading folders:', error);
+                        panel.webview.postMessage({ command: 'loadFolders', folders: [] });
+                    }
+                    break;
+            }
+        });
+    });
+    context.subscriptions.push(menuCommand);
+}
+
+
+/***/ }),
+/* 42 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.registerCreateRequestCommand = registerCreateRequestCommand;
 const vscode = __importStar(__webpack_require__(2));
 const fs = __importStar(__webpack_require__(3));
@@ -2124,7 +2196,7 @@ function formatSingleText(input) {
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2341,14 +2413,18 @@ function formatSingleText(input) {
     return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
 }
 function runBuildRunnerCommand() {
-    const terminal = vscode.window.createTerminal('Flutter Build Runner');
+    const terminalName = 'Flutter Magic';
+    let terminal = vscode.window.terminals.find(t => t.name === terminalName);
+    if (!terminal) {
+        terminal = vscode.window.createTerminal(terminalName);
+    }
     terminal.show();
     terminal.sendText('flutter pub run build_runner build');
 }
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2380,7 +2456,7 @@ exports.registerCreateViewCommand = registerCreateViewCommand;
 const vscode = __importStar(__webpack_require__(2));
 const fs = __importStar(__webpack_require__(3));
 const path = __importStar(__webpack_require__(4));
-const view_1 = __webpack_require__(44);
+const view_1 = __webpack_require__(45);
 // Register command for creating view
 function registerCreateViewCommand(context) {
     const initCommand = vscode.commands.registerCommand('fluttermagictools.createView', async () => {
@@ -2516,14 +2592,18 @@ function convertToCapitalized(str) {
 }
 // Run build runner command
 function runBuildRunnerCommand() {
-    const terminal = vscode.window.createTerminal('Flutter Build Runner');
+    const terminalName = 'Flutter Magic';
+    let terminal = vscode.window.terminals.find(t => t.name === terminalName);
+    if (!terminal) {
+        terminal = vscode.window.createTerminal(terminalName);
+    }
     terminal.show();
     terminal.sendText('flutter pub run build_runner build');
 }
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2552,7 +2632,7 @@ function viewScript(viewName) {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2582,14 +2662,127 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.registerCreateCubitCommand = registerCreateCubitCommand;
 const vscode = __importStar(__webpack_require__(2));
-function registerCreateCubitCommand(context) {
-    const initCommand = vscode.commands.registerCommand('fluttermagictools.createCubit', () => { });
+const fs = __importStar(__webpack_require__(3));
+const path = __importStar(__webpack_require__(4));
+async function registerCreateCubitCommand(context) {
+    const initCommand = vscode.commands.registerCommand('fluttermagictools.createCubit', async () => {
+        const cubit = await vscode.window.showInputBox({
+            prompt: 'Enter the cubit name',
+            placeHolder: 'e.g., Transaction'
+        });
+        if (!cubit) {
+            vscode.window.showInformationMessage('Cubit creation canceled or no input provided.');
+            return;
+        }
+        const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+        if (!rootPath) {
+            vscode.window.showErrorMessage('Unable to determine the workspace root path.');
+            return;
+        }
+        const presentationFolderPath = path.join(rootPath, 'lib', 'presentations');
+        const selectedFolder = await vscode.window.showQuickPick(getDirectories(presentationFolderPath), { placeHolder: 'Select a folder for the cubit' });
+        if (!selectedFolder) {
+            vscode.window.showInformationMessage('No folder selected. Operation canceled.');
+            return;
+        }
+        const cubitFileName = `${toSnakeCase(cubit)}_cubit.dart`;
+        const stateFileName = `${toSnakeCase(cubit)}_state.dart`;
+        const cubitFilePath = path.join(presentationFolderPath, selectedFolder, 'cubit', cubitFileName);
+        const stateFilePath = path.join(presentationFolderPath, selectedFolder, 'cubit', stateFileName);
+        const generatedCubit = generateCubit(cubit);
+        const generatedState = generateState(cubit);
+        fs.mkdirSync(path.dirname(cubitFilePath), { recursive: true });
+        fs.writeFileSync(cubitFilePath, generatedCubit);
+        fs.writeFileSync(stateFilePath, generatedState);
+        addExportToFile(selectedFolder, toSnakeCase(cubit));
+        vscode.window.showInformationMessage(`Cubit '${cubit}' created successfully`);
+        const shouldRunBuild = await vscode.window.showInformationMessage('Do you want to run `flutter pub run build_runner build` now?', 'Yes', 'No');
+        if (shouldRunBuild === 'Yes') {
+            runBuildRunnerCommand();
+        }
+    });
     context.subscriptions.push(initCommand);
+}
+function getDirectories(srcPath) {
+    return fs.readdirSync(srcPath).filter(file => fs.statSync(path.join(srcPath, file)).isDirectory());
+}
+function toSnakeCase(input) {
+    return input
+        .replace(/([a-z])([A-Z])/g, '$1_$2')
+        .replace(/\s+/g, '_')
+        .toLowerCase();
+}
+function addExportToFile(view, name) {
+    const viewPath = path.join(vscode.workspace.rootPath ?? '', 'lib', 'presentations', view);
+    const viewFilePath = path.join(viewPath, `${view}.dart`);
+    const exportCubitStatement = `export 'cubit/${name}_cubit.dart';\n`;
+    if (!fs.existsSync(viewFilePath)) {
+        fs.writeFileSync(viewFilePath, exportCubitStatement);
+    }
+    else {
+        const currentContent = fs.readFileSync(viewFilePath, 'utf-8');
+        if (!currentContent.includes(exportCubitStatement)) {
+            fs.appendFileSync(viewFilePath, exportCubitStatement);
+        }
+    }
+}
+function generateCubit(name) {
+    const cubitName = toPascalCase(name);
+    return `import 'package:hydrated_bloc/hydrated_bloc.dart';
+import '../../../lib.dart';
+export '${name}_state.dart';
+
+class ${cubitName}Cubit extends HydratedCubit<${cubitName}State> {
+  ${cubitName}Cubit() : super(${cubitName}State()) {
+  }
+
+  @override
+  ${cubitName}State? fromJson(Map<String, dynamic> json) {
+    return ${cubitName}State.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic>? toJson(${cubitName}State state) {
+    return state.toJson();
+  }
+}
+`;
+}
+function generateState(name) {
+    const stateName = toPascalCase(name);
+    return `import 'package:freezed_annotation/freezed_annotation.dart';
+part '${name}_state.freezed.dart';
+part '${name}_state.g.dart';
+
+@freezed
+class ${stateName}State with _$${stateName}State {
+  const ${stateName}State._();
+  factory ${stateName}State({
+    String? user,
+  }) = _${stateName}State;
+
+  factory ${stateName}State.fromJson(Map<String, dynamic> json) =>
+      _$${stateName}StateFromJson(json);
+}
+`;
+}
+function toPascalCase(input) {
+    return input
+        .replace(/(^\w|_\w)/g, match => match.replace('_', '').toUpperCase());
+}
+function runBuildRunnerCommand() {
+    const terminalName = 'Flutter Magic';
+    let terminal = vscode.window.terminals.find(t => t.name === terminalName);
+    if (!terminal) {
+        terminal = vscode.window.createTerminal(terminalName);
+    }
+    terminal.show();
+    terminal.sendText('flutter pub run build_runner build');
 }
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2668,7 +2861,7 @@ function convertToCamelCase(input) {
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2696,48 +2889,109 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.registerMenuCommand = registerMenuCommand;
+exports.registerGenerateCommand = registerGenerateCommand;
 const vscode = __importStar(__webpack_require__(2));
-const fs = __importStar(__webpack_require__(3));
-const path = __importStar(__webpack_require__(4));
-function registerMenuCommand(context) {
-    let menuCommand = vscode.commands.registerCommand('fluttermagictools.menu', async () => {
-        const panel = vscode.window.createWebviewPanel('fluttermagictools', 'Flutter Magic Tools', vscode.ViewColumn.Beside, {
-            enableScripts: true,
-            localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'src', 'menu'))]
-        });
-        const cssUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'src', 'menu', 'css', 'index.css')));
-        const jsUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'src', 'menu', 'js', 'index.js')));
-        const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '';
-        const entitiesFolderPath = path.join(rootPath, 'lib', 'domain', 'entities');
-        const htmlPath = path.join(context.extensionPath, 'src', 'menu', 'index.html');
-        let htmlContent = fs.readFileSync(htmlPath, 'utf8');
-        htmlContent = htmlContent.replace('{{cssUri}}', cssUri.toString());
-        htmlContent = htmlContent.replace('{{jsUri}}', jsUri.toString());
-        panel.webview.html = htmlContent;
-        panel.webview.onDidReceiveMessage(async (message) => {
-            switch (message.command) {
-                case 'loadModelFolders':
-                    try {
-                        if (!fs.existsSync(entitiesFolderPath)) {
-                            panel.webview.postMessage({ command: 'loadFolders', folders: [] });
-                            return;
-                        }
-                        const folders = fs.readdirSync(entitiesFolderPath).filter(file => {
-                            return fs.statSync(path.join(entitiesFolderPath, file)).isDirectory();
-                        });
-                        console.log(`Folders: ${folders}`); // Debugging output
-                        panel.webview.postMessage({ command: 'loadFolders', folders });
-                    }
-                    catch (error) {
-                        console.error('Error reading folders:', error);
-                        panel.webview.postMessage({ command: 'loadFolders', folders: [] });
-                    }
-                    break;
-            }
-        });
+function registerGenerateCommand(context) {
+    const initCommand = vscode.commands.registerCommand('fluttermagictools.generate', async () => {
+        const terminalName = 'Flutter Magic';
+        let terminal = vscode.window.terminals.find(t => t.name === terminalName);
+        if (!terminal) {
+            terminal = vscode.window.createTerminal(terminalName);
+        }
+        terminal.show();
+        terminal.sendText('flutter pub run build_runner build');
     });
-    context.subscriptions.push(menuCommand);
+    context.subscriptions.push(initCommand);
+}
+
+
+/***/ }),
+/* 49 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.registerCleanGetCommand = registerCleanGetCommand;
+const vscode = __importStar(__webpack_require__(2));
+function registerCleanGetCommand(context) {
+    const initCommand = vscode.commands.registerCommand('fluttermagictools.cleanGet', async () => {
+        const terminalName = 'Flutter Magic';
+        let terminal = vscode.window.terminals.find(t => t.name === terminalName);
+        if (!terminal) {
+            terminal = vscode.window.createTerminal(terminalName);
+        }
+        terminal.show();
+        terminal.sendText('flutter clean && flutter pub get');
+    });
+    context.subscriptions.push(initCommand);
+}
+
+
+/***/ }),
+/* 50 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.registerDartFixCommand = registerDartFixCommand;
+const vscode = __importStar(__webpack_require__(2));
+function registerDartFixCommand(context) {
+    const initCommand = vscode.commands.registerCommand('fluttermagictools.dartFix', async () => {
+        const terminalName = 'Flutter Magic';
+        let terminal = vscode.window.terminals.find(t => t.name === terminalName);
+        if (!terminal) {
+            terminal = vscode.window.createTerminal(terminalName);
+        }
+        terminal.show();
+        terminal.sendText('dart fix --dry-run && dart fix --apply');
+    });
+    context.subscriptions.push(initCommand);
 }
 
 
@@ -2778,12 +3032,15 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.activate = activate;
 exports.deactivate = deactivate;
 const initialize_1 = __webpack_require__(1);
-const menu_1 = __webpack_require__(47);
-const create_request_1 = __webpack_require__(41);
-const create_model_1 = __webpack_require__(42);
-const create_view_1 = __webpack_require__(43);
-const create_cubit_1 = __webpack_require__(45);
-const create_endpoint_1 = __webpack_require__(46);
+const menu_1 = __webpack_require__(41);
+const create_request_1 = __webpack_require__(42);
+const create_model_1 = __webpack_require__(43);
+const create_view_1 = __webpack_require__(44);
+const create_cubit_1 = __webpack_require__(46);
+const create_endpoint_1 = __webpack_require__(47);
+const generate_1 = __webpack_require__(48);
+const clean_get_1 = __webpack_require__(49);
+const dart_fix_1 = __webpack_require__(50);
 /**
  * Activates the extension
  * @param {vscode.ExtensionContext} context - The context in which the extension is activated.
@@ -2798,6 +3055,9 @@ function activate(context) {
     (0, create_view_1.registerCreateViewCommand)(context);
     (0, create_cubit_1.registerCreateCubitCommand)(context);
     (0, create_endpoint_1.registerCreateEndpointCommand)(context);
+    (0, generate_1.registerGenerateCommand)(context);
+    (0, clean_get_1.registerCleanGetCommand)(context);
+    (0, dart_fix_1.registerDartFixCommand)(context);
     // Register webview provider
     // Register other commands
     // registerCreateFeatureCommand(context);

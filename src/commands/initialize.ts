@@ -74,10 +74,7 @@ export async function registerInitializeCommand(context: vscode.ExtensionContext
                 createDiFiles(libPath);
                 createRouterFiles(libPath);
 
-                await runTask(`flutter pub add dio auto_route connectivity_plus path_provider collection dartz phosphor_flutter device_info_plus package_info_plus equatable flutter_easy_dialogs flutter_bloc freezed_annotation get_it gap hydrated_bloc json_annotation &&
-                    flutter pub add auto_route_generator build_runner freezed json_serializable -d &&
-                    flutter pub get &&
-                    flutter pub run build_runner build`);
+                await runTask();
                 vscode.window.showInformationMessage('Initialization complete.');
             } catch (err) {
                 vscode.window.showErrorMessage(`Error during initialization: ${(err as Error).message}`);
@@ -258,16 +255,21 @@ function getScriptContent(fileName: string) {
     }
 }
 
-// Function to run a shell command
-async function runTask(command: string): Promise<void> {
-    const terminal = vscode.window.createTerminal('Flutter Build Runner');
+
+
+
+function runTask(): void {
+    const terminalName = 'Flutter Magic';
+    let terminal = vscode.window.terminals.find(t => t.name === terminalName);
+
+    if (!terminal) {
+        terminal = vscode.window.createTerminal(terminalName);
+    }
+
     terminal.show();
-    terminal.sendText(command);
+    terminal.sendText(`flutter pub add dio auto_route connectivity_plus path_provider collection dartz phosphor_flutter device_info_plus package_info_plus equatable flutter_easy_dialogs flutter_bloc freezed_annotation get_it gap hydrated_bloc json_annotation &&
+                    flutter pub add auto_route_generator build_runner freezed json_serializable -d &&
+                    flutter pub get &&
+                    flutter pub run build_runner build`);
 }
 
-
-
-// Export deactivate function
-export function deactivate(): void {
-    // Clean-up logic if needed
-}
