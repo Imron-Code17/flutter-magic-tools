@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { registerInitializeCommand } from './commands/initialize';
+import { registerMenuCommand } from './commands/menu';
 import { registerCreateRequestCommand } from './commands/create_request';
 import { registerCreateModelCommand } from './commands/create_model';
 import { registerCreateViewCommand } from './commands/create_view';
@@ -15,6 +16,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
 	// Register commands
 	registerInitializeCommand(context);
+	registerMenuCommand(context);
 	registerCreateRequestCommand(context);
 	registerCreateModelCommand(context);
 	registerCreateViewCommand(context);

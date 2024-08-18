@@ -3,12 +3,6 @@
 /******/ 	var __webpack_modules__ = ([
 /* 0 */,
 /* 1 */
-/***/ ((module) => {
-
-module.exports = require("vscode");
-
-/***/ }),
-/* 2 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -41,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.registerInitializeCommand = registerInitializeCommand;
 exports.deactivate = deactivate;
-const vscode = __importStar(__webpack_require__(1));
+const vscode = __importStar(__webpack_require__(2));
 const fs = __importStar(__webpack_require__(3));
 const path = __importStar(__webpack_require__(4));
 // Import script files
@@ -285,6 +279,12 @@ function deactivate() {
     // Clean-up logic if needed
 }
 
+
+/***/ }),
+/* 2 */
+/***/ ((module) => {
+
+module.exports = require("vscode");
 
 /***/ }),
 /* 3 */
@@ -1993,8 +1993,7 @@ class AuthState with _$AuthState {
 
 
 /***/ }),
-/* 41 */,
-/* 42 */
+/* 41 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2023,7 +2022,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.registerCreateRequestCommand = registerCreateRequestCommand;
-const vscode = __importStar(__webpack_require__(1));
+const vscode = __importStar(__webpack_require__(2));
 const fs = __importStar(__webpack_require__(3));
 const path = __importStar(__webpack_require__(4));
 function registerCreateRequestCommand(context) {
@@ -2125,7 +2124,7 @@ function formatSingleText(input) {
 
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2154,7 +2153,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.registerCreateModelCommand = registerCreateModelCommand;
-const vscode = __importStar(__webpack_require__(1));
+const vscode = __importStar(__webpack_require__(2));
 const fs = __importStar(__webpack_require__(3));
 const path = __importStar(__webpack_require__(4));
 function registerCreateModelCommand(context) {
@@ -2349,7 +2348,7 @@ function runBuildRunnerCommand() {
 
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
@@ -2378,10 +2377,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.registerCreateViewCommand = registerCreateViewCommand;
-const vscode = __importStar(__webpack_require__(1));
+const vscode = __importStar(__webpack_require__(2));
 const fs = __importStar(__webpack_require__(3));
 const path = __importStar(__webpack_require__(4));
-const view_1 = __webpack_require__(45);
+const view_1 = __webpack_require__(44);
 // Register command for creating view
 function registerCreateViewCommand(context) {
     const initCommand = vscode.commands.registerCommand('fluttermagictools.createView', async () => {
@@ -2524,7 +2523,7 @@ function runBuildRunnerCommand() {
 
 
 /***/ }),
-/* 45 */
+/* 44 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -2549,6 +2548,43 @@ function viewScript(viewName) {
     }
   }
     `.trim();
+}
+
+
+/***/ }),
+/* 45 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.registerCreateCubitCommand = registerCreateCubitCommand;
+const vscode = __importStar(__webpack_require__(2));
+function registerCreateCubitCommand(context) {
+    const initCommand = vscode.commands.registerCommand('fluttermagictools.createCubit', () => { });
+    context.subscriptions.push(initCommand);
 }
 
 
@@ -2581,45 +2617,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.registerCreateCubitCommand = registerCreateCubitCommand;
-const vscode = __importStar(__webpack_require__(1));
-function registerCreateCubitCommand(context) {
-    const initCommand = vscode.commands.registerCommand('fluttermagictools.createCubit', () => { });
-    context.subscriptions.push(initCommand);
-}
-
-
-/***/ }),
-/* 47 */
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.registerCreateEndpointCommand = registerCreateEndpointCommand;
-const vscode = __importStar(__webpack_require__(1));
+const vscode = __importStar(__webpack_require__(2));
 const fs = __importStar(__webpack_require__(3));
 const path = __importStar(__webpack_require__(4));
 function registerCreateEndpointCommand(context) {
@@ -2668,6 +2667,80 @@ function convertToCamelCase(input) {
 }
 
 
+/***/ }),
+/* 47 */
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.registerMenuCommand = registerMenuCommand;
+const vscode = __importStar(__webpack_require__(2));
+const fs = __importStar(__webpack_require__(3));
+const path = __importStar(__webpack_require__(4));
+function registerMenuCommand(context) {
+    let menuCommand = vscode.commands.registerCommand('fluttermagictools.menu', async () => {
+        const panel = vscode.window.createWebviewPanel('fluttermagictools', 'Flutter Magic Tools', vscode.ViewColumn.Beside, {
+            enableScripts: true,
+            localResourceRoots: [vscode.Uri.file(path.join(context.extensionPath, 'src', 'menu'))]
+        });
+        const cssUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'src', 'menu', 'css', 'index.css')));
+        const jsUri = panel.webview.asWebviewUri(vscode.Uri.file(path.join(context.extensionPath, 'src', 'menu', 'js', 'index.js')));
+        const rootPath = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath || '';
+        const entitiesFolderPath = path.join(rootPath, 'lib', 'domain', 'entities');
+        const htmlPath = path.join(context.extensionPath, 'src', 'menu', 'index.html');
+        let htmlContent = fs.readFileSync(htmlPath, 'utf8');
+        htmlContent = htmlContent.replace('{{cssUri}}', cssUri.toString());
+        htmlContent = htmlContent.replace('{{jsUri}}', jsUri.toString());
+        panel.webview.html = htmlContent;
+        panel.webview.onDidReceiveMessage(async (message) => {
+            switch (message.command) {
+                case 'loadModelFolders':
+                    try {
+                        if (!fs.existsSync(entitiesFolderPath)) {
+                            panel.webview.postMessage({ command: 'loadFolders', folders: [] });
+                            return;
+                        }
+                        const folders = fs.readdirSync(entitiesFolderPath).filter(file => {
+                            return fs.statSync(path.join(entitiesFolderPath, file)).isDirectory();
+                        });
+                        console.log(`Folders: ${folders}`); // Debugging output
+                        panel.webview.postMessage({ command: 'loadFolders', folders });
+                    }
+                    catch (error) {
+                        console.error('Error reading folders:', error);
+                        panel.webview.postMessage({ command: 'loadFolders', folders: [] });
+                    }
+                    break;
+            }
+        });
+    });
+    context.subscriptions.push(menuCommand);
+}
+
+
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -2704,12 +2777,13 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.activate = activate;
 exports.deactivate = deactivate;
-const initialize_1 = __webpack_require__(2);
-const create_request_1 = __webpack_require__(42);
-const create_model_1 = __webpack_require__(43);
-const create_view_1 = __webpack_require__(44);
-const create_cubit_1 = __webpack_require__(46);
-const create_endpoint_1 = __webpack_require__(47);
+const initialize_1 = __webpack_require__(1);
+const menu_1 = __webpack_require__(47);
+const create_request_1 = __webpack_require__(41);
+const create_model_1 = __webpack_require__(42);
+const create_view_1 = __webpack_require__(43);
+const create_cubit_1 = __webpack_require__(45);
+const create_endpoint_1 = __webpack_require__(46);
 /**
  * Activates the extension
  * @param {vscode.ExtensionContext} context - The context in which the extension is activated.
@@ -2718,6 +2792,7 @@ function activate(context) {
     console.log('FlutterMagicTools is now active!');
     // Register commands
     (0, initialize_1.registerInitializeCommand)(context);
+    (0, menu_1.registerMenuCommand)(context);
     (0, create_request_1.registerCreateRequestCommand)(context);
     (0, create_model_1.registerCreateModelCommand)(context);
     (0, create_view_1.registerCreateViewCommand)(context);

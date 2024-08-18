@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            margin: 0;
+            display: flex;
+            justify-content: left;
+            align-items: top;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 1200px;
+            /* You can adjust this maximum width if needed */
+            background-color: #252526;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-sizing: border-box;
+        }
+
+        h4 {
+            font-size: 12px;
+            color: #d4d4d4;
+        }
+
+        input[type="text"],
+        textarea,
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 12px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #d4d4d4;
+            background-color: #1e1e1e;
+            border: 1px solid #3c3c3c;
+            border-radius: 3px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #007acc;
+            outline: none;
+        }
+
+        textarea {
+            resize: none;
+            height: 400px;
+            /* Increased height */
+        }
+
+        button {
+            background-color: #0e639c;
+            border: none;
+            color: #ffffff;
+            cursor: not-allowed;
+            transition: background-color 0.3s;
+            pointer-events: none;
+        }
+
+        button.active {
+            cursor: pointer;
+            background-color: #0e639c;
+            pointer-events: auto;
+        }
+
+        button.active:hover {
+            background-color: #1177bb;
+        }
+
+        .error {
+            border-color: red;
+        }
+
+        .message {
+            color: red;
+            font-size: 12px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h4>Model Name</h4>
+        <input type="text" name="myInput" placeholder="Enter model name" required>
+        <h4>JSON</h4>
+        <textarea id="jsonTextarea" placeholder="Paste your JSON here..." required></textarea>
+        <div id="message" class="message"></div>
+        <button id="generateButton">Generate</button>
+    </div>
+
+    <script>
+        const textarea = document.getElementById('jsonTextarea');
+        const message = document.getElementById('message');
+        const button = document.getElementById('generateButton');
+
+        function formatJson() {
+            const text = textarea.value.trim();
+            try {
+                if (text === "") {
+                    textarea.classList.remove('error');
+                    message.textContent = '';
+                    button.classList.remove('active');
+                    return;
+                }
+
+                const parsedJson = JSON.parse(text);
+                const formattedJson = JSON.stringify(parsedJson, null, 4);
+                textarea.value = formattedJson;
+                textarea.classList.remove('error');
+                message.textContent = '';
+                button.disabled = false;
+                button.classList.add('active');
+            } catch (e) {
+                textarea.classList.add('error');
+                message.textContent = 'Invalid JSON format';
+                button.disabled = true;
+                button.classList.remove('active');
+            }
+        }
+
+        function autoCloseBrackets(e) {
+            const cursorPosition = textarea.selectionStart;
+            const value = textarea.value;
+            const beforeCursor = value.slice(0, cursorPosition);
+            const afterCursor = value.slice(cursorPosition);
+
+            if (e.key === "Enter") {
+                let indent = beforeCursor.match(/(\s*)$/)[0];
+                if (beforeCursor.endsWith("{")) {
+                    textarea.value = `${beforeCursor}\n${indent}    \n${indent}}${afterCursor}`;
+                    textarea.selectionEnd = cursorPosition + indent.length + 5;
+                    e.preventDefault();
+                } else if (beforeCursor.endsWith("[")) {
+                    textarea.value = `${beforeCursor}\n${indent}    \n${indent}]${afterCursor}`;
+                    textarea.selectionEnd = cursorPosition + indent.length + 5;
+                    e.preventDefault();
+                }
+            }
+        }
+
+        textarea.addEventListener('input', formatJson);
+        textarea.addEventListener('keydown', autoCloseBrackets);
+
+        button.addEventListener('click', formatJson);
+    </script>
+</body>
+
+</html>

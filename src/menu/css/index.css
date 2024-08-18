@@ -1,0 +1,205 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #181818;
+    font-size: 10px;
+    color: rgba(221, 221, 221, 0.5);
+    width: 100%;
+}
+
+.tab-container {
+    width: 100%;
+    max-width: 1200px;
+    position: relative;
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 0.2px solid rgba(221, 221, 221, 0.3);
+    position: relative;
+    width: 60%;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #181818;
+    border: none;
+    color: rgba(221, 221, 221, 0.5);
+}
+
+.tab.active {
+    font-weight: 600;
+    color: white;
+}
+
+.tab-content {
+    background-color: #181818;
+    width: 60%;
+}
+
+.content {
+    display: none;
+}
+
+.content.active {
+    display: block;
+}
+
+.indicator {
+    height: 2px;
+    background-color: #10439F;
+    position: absolute;
+    bottom: 0;
+    transition: all 0.3s ease;
+    width: 60%;
+    left: 0;
+}
+
+.tab-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    background-color: rgba(221, 221, 221, 0.3);
+    transform: translateX(100%);
+}
+
+.form-container {
+    width: 100%;
+    max-width: 1200px;
+    /* You can adjust this maximum width if needed */
+    background-color: #252526;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+h4 {
+    font-size: 12px;
+    color: #d4d4d4;
+}
+
+input[type="text"],
+textarea,
+button {
+    width: 100%;
+    padding: 10px;
+    font-size: 12px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #d4d4d4;
+    background-color: #1e1e1e;
+    border: 1px solid #3c3c3c;
+    border-radius: 3px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    border-color: #007acc;
+    outline: none;
+}
+
+textarea {
+    resize: none;
+    height: 400px;
+    /* Increased height */
+}
+
+button {
+    background-color: #0e639c;
+    border: none;
+    color: #ffffff;
+    cursor: not-allowed;
+    transition: background-color 0.3s;
+    pointer-events: none;
+}
+
+button.active {
+    cursor: pointer;
+    background-color: #0e639c;
+    pointer-events: auto;
+}
+
+button.active:hover {
+    background-color: #1177bb;
+}
+
+.error {
+    border-color: red;
+}
+
+.message {
+    color: red;
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-plus {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+#folderDropdown {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+#plusButton {
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: #007acc;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#plusButton:hover {
+    background-color: #005fa3;
+}
+
+#formContainer {
+    display: flex;
+    align-items: center;
+}
+
+#folderInput {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+#closeButton {
+    padding: 5px;
+    font-size: 14px;
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#closeButton:hover {
+    background-color: #c0392b;
+}

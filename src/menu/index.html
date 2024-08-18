@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabbed Interface</title>
+    <link rel="stylesheet" href="{{cssUri}}">
+</head>
+
+<body>
+    <div class="tab-container">
+        <div class="tabs">
+            <div class="tab" id="tab-model">Model</div>
+            <div class="tab" id="tab-view">View</div>
+            <div class="tab" id="tab-endpoint">Endpoint</div>
+            <div class="tab" id="tab-cubit">Cubit</div>
+            <div class="tab" id="tab-request">Request</div>
+            <div class="indicator"></div>
+        </div>
+        <div class="tab-content">
+            <!-- Model View -->
+            <div class="content" id="content-model">
+                <div class="form-container">
+                    <h4>Model Name</h4>
+                    <input type="text" name="modelName" placeholder="Enter model name" required>
+                    <h4>Directory</h4>
+                    <div class="container">
+                        <div class="dropdown-plus">
+                            <select id="folderDropdown" onchange="handleDropdownChange()">
+                                <!-- Folders will be dynamically added here -->
+                            </select>
+                            <button id="plusButton" onclick="toggleForm()">+</button>
+                        </div>
+                        <div id="formContainer" style="display: none;">
+                            <input type="text" id="folderInput" placeholder="Enter folder name..." />
+                            <button id="closeButton" onclick="closeForm()">X</button>
+                        </div>
+                    </div>
+
+                    <h4>JSON</h4>
+                    <textarea id="jsonTextarea" placeholder="Paste your JSON here..." required></textarea>
+                    <div id="message" class="message"></div>
+                    <button id="generateButton">Generate</button>
+                </div>
+            </div>
+
+            <!-- View Content -->
+            <div class="content" id="content-view">
+                <!-- Isi konten View di sini -->
+            </div>
+
+            <!-- Endpoint Content -->
+            <div class="content" id="content-endpoint">
+                <!-- Isi konten Endpoint di sini -->
+            </div>
+
+            <!-- Cubit Content -->
+            <div class="content" id="content-cubit">
+                <!-- Isi konten Cubit di sini -->
+            </div>
+
+            <!-- Request Content -->
+            <div class="content" id="content-request">
+                <!-- Isi konten Request di sini -->
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    // JavaScript code here, similar to what you provided, to handle tab switching.
+    document.addEventListener('DOMContentLoaded', async function () {
+        const tabs = document.querySelectorAll('.tab');
+        const contents = document.querySelectorAll('.content');
+        const indicator = document.querySelector('.indicator');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+
+                const targetContentId = `content-${this.id.replace('tab-', '')}`;
+                const targetContent = document.getElementById(targetContentId);
+
+                this.classList.add('active');
+                targetContent.classList.add('active');
+
+                const tabRect = this.getBoundingClientRect();
+                const tabsRect = document.querySelector('.tabs').getBoundingClientRect();
+                indicator.style.width = `${tabRect.width}px`;
+                indicator.style.left = `${tabRect.left - tabsRect.left}px`;
+            });
+        });
+
+        if (tabs.length > 0) {
+            tabs[0].click();
+        }
+
+        const folderSearch = document.getElementById('folderSearch');
+        const dropdownList = document.getElementById('folderDropdownList');
+        const textarea = document.getElementById('jsonTextarea');
+        const message = document.getElementById('message');
+        const button = document.getElementById('generateButton');
+
+        function formatJson() {
+            const text = textarea.value.trim();
+            try {
+                if (text === "") {
+                    textarea.classList.remove('error');
+                    message.textContent = '';
+                    button.classList.remove('active');
+                    return;
+                }
+
+                const parsedJson = JSON.parse(text);
+                const formattedJson = JSON.stringify(parsedJson, null, 4);
+                textarea.value = formattedJson;
+                textarea.classList.remove('error');
+                message.textContent = '';
+                button.disabled = false;
+                button.classList.add('active');
+            } catch (e) {
+                textarea.classList.add('error');
+                message.textContent = 'Invalid JSON format';
+                button.disabled = true;
+                button.classList.remove('active');
+            }
+        }
+
+        function autoCloseBrackets(e) {
+            const cursorPosition = textarea.selectionStart;
+            const value = textarea.value;
+            const beforeCursor = value.slice(0, cursorPosition);
+            const afterCursor = value.slice(cursorPosition);
+
+            if (e.key === "Enter") {
+                let indent = beforeCursor.match(/(\s*)$/)[0];
+                if (beforeCursor.endsWith("{")) {
+                    textarea.value = `${beforeCursor}\n${indent}    \n${indent}}${afterCursor}`;
+                    textarea.selectionEnd = cursorPosition + indent.length + 5;
+                    e.preventDefault();
+                } else if (beforeCursor.endsWith("[")) {
+                    textarea.value = `${beforeCursor}\n${indent}    \n${indent}]${afterCursor}`;
+                    textarea.selectionEnd = cursorPosition + indent.length + 5;
+                    e.preventDefault();
+                }
+            }
+        }
+
+        textarea.addEventListener('input', formatJson);
+        textarea.addEventListener('keydown', autoCloseBrackets);
+
+        button.addEventListener('click', formatJson);
+
+        // Fetch the model folders from the backend
+        async function loadModelFolders() {
+            const response = await fetch('', {
+                method: 'POST',
+                body: JSON.stringify({ command: 'loadModelFolders' }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const folders = await response.json();
+
+            // Add folders to the dropdown list
+            dropdownList.innerHTML = '';
+            folders.forEach(folder => {
+                const item = document.createElement('div');
+                item.classList.add('dropdown-item');
+                item.textContent = folder;
+                item.addEventListener('click', function () {
+                    folderSearch.value = folder;
+                    dropdownList.classList.remove('active');
+                });
+                dropdownList.appendChild(item);
+            });
+        }
+
+        folderSearch.addEventListener('input', function () {
+            const filter = folderSearch.value.toLowerCase();
+            const items = dropdownList.querySelectorAll('.dropdown-item');
+            let matchFound = false;
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    item.style.display = '';
+                    matchFound = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            if (matchFound) {
+                dropdownList.classList.add('active');
+            } else {
+                dropdownList.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!dropdownList.contains(e.target) && e.target !== folderSearch) {
+                dropdownList.classList.remove('active');
+            }
+        });
+
+        await loadModelFolders();
+    });
+
+</script>
+
+</html>
